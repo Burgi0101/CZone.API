@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
 export type ClubModel = Document & {
     name: string;
@@ -6,8 +6,8 @@ export type ClubModel = Document & {
 };
 
 export const ClubSchema = new Schema({
-    name: String,
-    category: String
+    name: { type: String, required: true },
+    category: { type: String, required: true },
 });
 
 export default model<ClubModel>("Club", ClubSchema);
