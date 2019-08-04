@@ -49,7 +49,7 @@ router.post("/", async (req: Request, res: Response) => {
                 return res.send(JSON.stringify(club));
             })
             .catch((err) => {
-                return console.error(err);
+                return res.send(err);
             });
     }
     catch (error) {
