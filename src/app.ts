@@ -22,31 +22,29 @@ const options = {
 /* DB CONNECTION */
 const db = "mongodb://localhost:27017/local";
 
-mongoose
-  .connect(
-    db,
-    options
-  )
-  .then(
-    () => { console.log(`Successfully connected to the ${db}`); },
-    error => { console.log(error); }
-  );
+try {
+  mongoose
+    .connect(db, options)
+    .then(() => console.log(`Successfully connected to the ${db}`))
+    .catch((error) => console.log(error));
 
-/* CREATE NEW EXPRESS INSTANCE */
-const app: express.Application = express();
+  /* CREATE NEW EXPRESS INSTANCE */
+  const app: express.Application = express();
 
-/* MIDDLEWARES */
-app.use(express.json());
+  /* MIDDLEWARES */
+  app.use(express.json());
 
-/* APP ROUTES */
-app.use("/api/clubs", clubs);
-app.use("/api/users", users);
+  /* APP ROUTES */
+  app.use("/api/clubs", clubs);
+  app.use("/api/users", users);
 
-/* STARTING SERVE ON GIVEN PORT */
+  /* STARTING SERVE ON GIVEN PORT */
 
-const port = process.env.PORT || "3000";
+  const port = process.env.PORT || "3000";
 
-app.listen(port, () => {
-  console.log(`\nServer listening on port ${port}`);
-  console.log("Press CTRL-C to stop\n");
-});
+  app.listen(port, () => {
+    console.log(`\nServer listening on port ${port}`);
+    console.log("Press CTRL-C to stop\n");
+  });
+}
+catch (error) { console.log(error); }
