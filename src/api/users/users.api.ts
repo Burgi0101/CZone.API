@@ -8,6 +8,7 @@ router.post("/register", async (req: Request, res: Response) => {
     try {
         const user = new User({
             email: req.body.email,
+            nickname: req.body.nickname,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             birthdate: req.body.birthdate,
@@ -39,7 +40,7 @@ router.post("/login", async (req: Request, res: Response) => {
                 user.schema.methods.comparePassword(req.body.password, user.password, function (err, isMatch) {
                     if (err) throw err;
                     if (isMatch) {
-                        res.send("User successfully logged in!");
+                        res.send({ token: user.id });
                     } else {
                         res.status(403).send("Incorrect user credentials!");
                     }
