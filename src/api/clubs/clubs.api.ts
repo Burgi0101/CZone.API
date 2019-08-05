@@ -40,7 +40,9 @@ router.post("/", async (req: Request, res: Response) => {
     try {
         const club = new Club({
             name: req.body.name,
-            category: req.body.category
+            category: req.body.category,
+            manager: req.body.manager,
+            type: req.body.type
         });
 
         club
@@ -63,7 +65,9 @@ router.put("/:id", async (req: Request, res: Response) => {
         const updatedClub: IClub = {
             _id: req.params.id,
             name: req.body.name,
-            category: req.body.category
+            category: req.body.category,
+            manager: req.body.manager,
+            type: req.body.type
         };
 
         Club
