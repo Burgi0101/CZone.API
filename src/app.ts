@@ -1,50 +1,57 @@
 import express from "express";
 import mongoose from "mongoose";
 
-import clubs from "./api/clubs/clubs.api";
-import users from "./api/users/users.api";
+class App {
+    public app: express.Application;
+    public port: number;
 
-/* DB CONNECTION OPTIONS*/
-const options = {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  autoIndex: false, // Don't build indexes
-  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
-  reconnectInterval: 500, // Reconnect every 500ms
-  poolSize: 10, // Maintain up to 10 socket connections
-  // If not connected, return errors immediately rather than waiting for reconnect
-  bufferMaxEntries: 0,
-  connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-};
+    constructor(controllers, port) {
+        this.app = express();
+        this.port = port;
 
-/* DB CONNECTION */
-const db = "mongodb://localhost:27017/local";
+        this.initializeMiddlewares();
+        this.initializeDBConnection("mongodb://localhost:27017/local", {
+            useNewUrlParser: true,
+            useCreateIndex: true,
+            useFindAndModify: false,
+            autoIndex: false, // Don't build indexes
+            reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+            reconnectInterval: 500, // Reconnect every 500ms
+            poolSize: 10, // Maintain up to 10 socket connections
+            // If not connected, return errors immediately rather than waiting for reconnect
+            bufferMaxEntries: 0,
+            connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+        });
+        this.initializeControllers(controllers);
+    }
 
-try {
-  mongoose
-    .connect(db, options)
-    .then(() => console.log(`Successfully connected to the ${db}`))
-    .catch((error) => console.log(error));
+    private initializeMiddlewares() {
+        this.app.use(express.json());
+    }
 
-  /* CREATE NEW EXPRESS INSTANCE */
-  const app: express.Application = express();
+    private initializeControllers(controllers) {
+        controllers.forEach((controller) => {
+            this.app.use("/api/", controller.router);
+        });
+    }
 
-  /* MIDDLEWARES */
-  app.use(express.json());
+    private initializeDBConnection(connectionString: string, options) {
+        try {
+            mongoose
+                .connect(connectionString, options)
+                .then(() => console.log(`Successfully connected to the ${connectionString}`))
+                .catch((error) => console.log(error));
+        }
+        catch (error) { console.log(error); }
+    }
 
-  /* APP ROUTES */
-  app.use("/api/clubs", clubs);
-  app.use("/api/users", users);
-
-  /* STARTING SERVE ON GIVEN PORT */
-
-  const port = process.env.PORT || "3000";
-
-  app.listen(port, () => {
-    console.log(`\nServer listening on port ${port}`);
-    console.log("Press CTRL-C to stop\n");
-  });
+    public listen() {
+        this.app.listen(this.port, () => {
+            console.log(`App listening on the port ${this.port}`);
+            console.log("Press CTRL-C to stop\n");
+        });
+    }
 }
-catch (error) { console.log(error); }
+
+export default App;
