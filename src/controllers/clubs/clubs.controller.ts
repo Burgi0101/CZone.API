@@ -1,17 +1,21 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 
+import { IController } from "../../interfaces/controller.interface";
 import { IClub } from "./clubs.interfaces";
-import Club, { ClubModel } from "./clubs.model";
 
-class ClubsController {
+import Club, { ClubModel } from "./clubs.model";
+import { ClubNotFoundException } from "./clubs.exceptions";
+
+
+class ClubsController implements IController {
     public path = "/clubs";
     public router = Router();
 
     constructor() {
-        this.intializeRoutes();
+        this.initializeRoutes();
     }
 
-    public intializeRoutes() {
+    public initializeRoutes() {
         this.router.get(`${this.path}`, this.getClubs);
         this.router.get(`${this.path}/:id`, this.getClubsById);
         this.router.post(`${this.path}`, this.createClub);
@@ -36,18 +40,13 @@ class ClubsController {
         }
     }
 
-    getClubsById = async (req: Request, res: Response) => {
-        try {
-            Club
-                .findById(req.params.id)
-                .then((club: ClubModel | null) => {
-                    res.send(club);
-                })
-                .catch(err => res.status(404).send("The Club you are looking for does not exist!"));
-        }
-        catch (error) {
-            res.status(500).send(error.toString());
-        }
+    getClubsById = async (req: Request, res: Response, next: NextFunction) => {
+        Club
+            .findById(req.params.id)
+            .then((club: ClubModel | null) => {
+                res.send(club);
+            })
+            .catch(err => next(new ClubNotFoundException(req.params.id)));
     }
 
     createClub = async (req: Request, res: Response) => {
@@ -73,45 +72,35 @@ class ClubsController {
         }
     }
 
-    updateClub = async (req: Request, res: Response) => {
-        try {
+    updateClub = async (req: Request, res: Response, next: NextFunction) => {
 
-            const updatedClub: IClub = {
-                _id: req.params.id,
-                name: req.body.name,
-                category: req.body.category,
-                manager: req.body.manager,
-                type: req.body.type
-            };
+        const updatedClub: IClub = {
+            _id: req.params.id,
+            name: req.body.name,
+            category: req.body.category,
+            manager: req.body.manager,
+            type: req.body.type
+        };
 
-            Club
-                .findByIdAndUpdate(
-                    req.params.id,
-                    updatedClub,
-                    { new: true }
-                )
-                .then((club: ClubModel | null) => {
-                    res.send(club);
-                })
-                .catch(err => res.status(404).send("The Club you are trying to update does not exist!"));
-        }
-        catch (error) {
-            res.status(500).send(error.toString());
-        }
+        Club
+            .findByIdAndUpdate(
+                req.params.id,
+                updatedClub,
+                { new: true }
+            )
+            .then((club: ClubModel | null) => {
+                res.send(club);
+            })
+            .catch(err => next(new ClubNotFoundException(req.params.id)));
     }
 
-    deleteClub = async (req: Request, res: Response) => {
-        try {
-            Club
-                .findByIdAndDelete(req.params.id)
-                .then((club: ClubModel | null) => {
-                    res.send(club);
-                })
-                .catch(err => res.status(404).send("The Club you are trying to delete does not exist!"));
-        }
-        catch (error) {
-            res.status(500).send(error.toString());
-        }
+    deleteClub = async (req: Request, res: Response, next: NextFunction) => {
+        Club
+            .findByIdAndDelete(req.params.id)
+            .then((club: ClubModel | null) => {
+                res.send(club);
+            })
+            .catch(err => next(new ClubNotFoundException(req.params.id)));
     }
 }
 

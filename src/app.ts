@@ -1,15 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
 
+import errorHandler from "./middleware/error/error.middleware";
+import { IController } from "./interfaces/controller.interface";
+
 class App {
     public app: express.Application;
     public port: number;
 
-    constructor(controllers, port) {
+    constructor(controllers: IController[], port) {
         this.app = express();
         this.port = port;
 
-        this.initializeMiddlewares();
         this.initializeDBConnection("mongodb://localhost:27017/local", {
             useNewUrlParser: true,
             useCreateIndex: true,
@@ -23,15 +25,22 @@ class App {
             connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
             socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
         });
+
+        this.initializeMiddlewares();
         this.initializeControllers(controllers);
+        this.initializeErrorHandler();
     }
 
     private initializeMiddlewares() {
         this.app.use(express.json());
     }
 
-    private initializeControllers(controllers) {
-        controllers.forEach((controller) => {
+    private initializeErrorHandler() {
+        this.app.use(errorHandler);
+    }
+
+    private initializeControllers(controllers: IController[]) {
+        controllers.forEach((controller: IController) => {
             this.app.use("/api/", controller.router);
         });
     }
