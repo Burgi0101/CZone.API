@@ -54,7 +54,7 @@ class ClubsController implements IController {
             const club = new Club({
                 name: req.body.name,
                 category: req.body.category,
-                manager: req.body.manager,
+                managers: req.body.managers,
                 type: req.body.type
             });
 
@@ -78,7 +78,7 @@ class ClubsController implements IController {
             _id: req.params.id,
             name: req.body.name,
             category: req.body.category,
-            manager: req.body.manager,
+            managers: req.body.managers,
             type: req.body.type
         };
 
