@@ -17,10 +17,10 @@ class ClubsController implements IController {
 
     public initializeRoutes() {
         this.router.get(`${this.path}`, this.getClubs);
-        this.router.get(`${this.path}/:id`, this.getClubsById);
+        this.router.get(`${this.path}/:id`, this.getClubById);
         this.router.post(`${this.path}`, this.createClub);
         this.router.put(`${this.path}/:id`, this.updateClub);
-        this.router.delete(`${this.path}/:id`, this.updateClub);
+        this.router.delete(`${this.path}/:id`, this.deleteClub);
     }
 
     getClubs = async (req: Request, res: Response) => {
@@ -40,7 +40,7 @@ class ClubsController implements IController {
         }
     }
 
-    getClubsById = async (req: Request, res: Response, next: NextFunction) => {
+    getClubById = async (req: Request, res: Response, next: NextFunction) => {
         Club
             .findById(req.params.id)
             .then((club: ClubModel | null) => {
