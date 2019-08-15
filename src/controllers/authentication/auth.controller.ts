@@ -77,7 +77,7 @@ class AuthenticationController implements IController {
 
     private createToken(user: UserModel): ITokenData {
         const expiresIn = 60 * 60; // an hour
-        const secret = "AHAHABLABLA";
+        const secret = process.env.SECRET;
         const dataStoredInToken: IDataStoredInToken = {
             _id: user._id,
         };

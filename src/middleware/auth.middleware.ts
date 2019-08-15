@@ -12,7 +12,7 @@ async function authMiddleware(req: IAuthenticatedRequest, res: Response, next: N
     const authToken = req.headers.authorization;
 
     if (authToken) {
-        const secret = "AHAHABLABLA";
+        const secret = process.env.SECRET;
         try {
             const verificationResponse = jwt.verify(authToken, secret) as IDataStoredInToken;
             const id = verificationResponse._id;

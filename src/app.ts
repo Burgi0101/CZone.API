@@ -1,6 +1,7 @@
 import express, { Application } from "express";
 import mongoose from "mongoose";
 import cookieParser = require("cookie-parser");
+import "dotenv/config";
 
 import errorHandler from "./middleware/error.middleware";
 import { IController } from "./interfaces/controller.interface";
@@ -9,11 +10,10 @@ class App {
     public app: Application;
     public port: number;
 
-    constructor(controllers: IController[], port) {
+    constructor(controllers: IController[]) {
         this.app = express();
-        this.port = port;
 
-        this.initializeDBConnection("mongodb://localhost:27017/local", {
+        this.initializeDBConnection(process.env.MONGO_PATH, {
             useNewUrlParser: true,
             useCreateIndex: true,
             useFindAndModify: false,
@@ -58,8 +58,8 @@ class App {
     }
 
     public listen() {
-        this.app.listen(this.port, () => {
-            console.log(`App listening on the port ${this.port}`);
+        this.app.listen(process.env.PORT, () => {
+            console.log(`App listening on the port ${process.env.PORT}`);
             console.log("Press CTRL-C to stop\n");
         });
     }
