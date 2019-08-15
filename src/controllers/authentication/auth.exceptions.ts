@@ -2,7 +2,7 @@ import { HttpException } from "../../middleware/error.middleware";
 
 export class UserAlreadyExistingException extends HttpException {
     constructor(email: string) {
-        super(403, `A User with the email: '${email}' is already existing`, {});
+        super(403, `A user with the email: '${email}' already exists`, {});
     }
 }
 
