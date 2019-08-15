@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 import validationMiddleware from "../../middleware/validation.middleware";
 
@@ -33,7 +34,7 @@ class AuthenticationController implements IController {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             birthdate: req.body.birthdate,
-            password: req.body.password,
+            password: await bcrypt.hash(req.body.password, 10),
         });
 
         user
@@ -41,6 +42,9 @@ class AuthenticationController implements IController {
             .then(() => {
                 const tokenData = this.createToken(user);
                 this.setAuthCookie(res, tokenData);
+
+                // Setting password undefined before returning data
+                user.password = undefined;
                 res.send(user);
             })
             .catch((err) => {
@@ -53,22 +57,23 @@ class AuthenticationController implements IController {
     }
 
     private login = async (req: Request, res: Response, next: NextFunction) => {
-        User
-            .findOne({ email: req.body.email })
-            .then((user: UserModel) => {
+        const user = await User.findOne({ email: req.body.email });
+
+        if (user) {
+            const isPasswordMatching = await bcrypt.compare(req.body.password, user.password);
+
+            if (isPasswordMatching) {
                 const tokenData = this.createToken(user);
                 this.setAuthCookie(res, tokenData);
 
-                user.schema.methods.comparePassword(req.body.password, user.password, function (err, isMatch: boolean) {
-                    if (err) throw err;
-                    if (isMatch) {
-                        res.send({ token: user.id });
-                    } else {
-                        next(new IncorrectCredentialsException());
-                    }
-                });
-            })
-            .catch(err => next(new IncorrectCredentialsException()));
+                res.send({ token: user.id });
+            } else {
+                next(new IncorrectCredentialsException());
+            }
+        }
+        else {
+            next(new IncorrectCredentialsException());
+        }
     }
 
     private logout = async (req: Request, res: Response) => {
