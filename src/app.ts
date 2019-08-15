@@ -1,5 +1,6 @@
 import express, { Application } from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import cookieParser = require("cookie-parser");
 import "dotenv/config";
 
@@ -35,6 +36,7 @@ class App {
     private initializeMiddlewares() {
         this.app.use(express.json());
         this.app.use(cookieParser());
+        this.app.use(cors());
     }
 
     private initializeErrorHandler() {
