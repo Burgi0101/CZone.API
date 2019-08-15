@@ -2,6 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 
 import { IController } from "../../interfaces/controller.interface";
 import User, { UserModel } from "./users.model";
+import validationMiddleware from "../../middleware/validation.middleware";
+import RegisterUserDto from "./users.dto";
 
 import { UserAlreadyExistingException, IncorrectCredentialsException } from "./users.exceptions";
 
@@ -14,7 +16,7 @@ class UserController implements IController {
     }
 
     public initializeRoutes() {
-        this.router.post(`${this.path}/register`, this.register);
+        this.router.post(`${this.path}/register`, validationMiddleware(RegisterUserDto), this.register);
         this.router.post(`${this.path}/login`, this.login);
     }
 

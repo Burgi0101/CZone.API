@@ -11,8 +11,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.0",
+    "@types/jsonwebtoken": "^8.3.2",
     "@types/mongoose": "^5.5.9",
     "bcrypt": "^3.0.6",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.10.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.5",
     "ts-node-dev": "^1.0.0-pre.40",
     "tsc": "^1.20150623.0",

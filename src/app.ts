@@ -1,11 +1,11 @@
-import express from "express";
+import express, { Application } from "express";
 import mongoose from "mongoose";
 
-import errorHandler from "./middleware/error/error.middleware";
+import errorHandler from "./middleware/error.middleware";
 import { IController } from "./interfaces/controller.interface";
 
 class App {
-    public app: express.Application;
+    public app: Application;
     public port: number;
 
     constructor(controllers: IController[], port) {

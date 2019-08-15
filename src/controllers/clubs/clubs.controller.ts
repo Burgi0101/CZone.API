@@ -5,6 +5,8 @@ import { IClub } from "./clubs.interfaces";
 
 import Club, { ClubModel } from "./clubs.model";
 import { ClubNotFoundException } from "./clubs.exceptions";
+import validationMiddleware from "../../middleware/validation.middleware";
+import CreateClubDto from "./clubs.dto";
 
 
 class ClubsController implements IController {
@@ -18,8 +20,8 @@ class ClubsController implements IController {
     public initializeRoutes() {
         this.router.get(`${this.path}`, this.getClubs);
         this.router.get(`${this.path}/:id`, this.getClubById);
-        this.router.post(`${this.path}`, this.createClub);
-        this.router.put(`${this.path}/:id`, this.updateClub);
+        this.router.post(`${this.path}`, validationMiddleware(CreateClubDto), this.createClub);
+        this.router.put(`${this.path}/:id`, validationMiddleware(CreateClubDto, true), this.updateClub);
         this.router.delete(`${this.path}/:id`, this.deleteClub);
     }
 
