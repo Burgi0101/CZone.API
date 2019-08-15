@@ -6,6 +6,12 @@ export class UserAlreadyExistingException extends HttpException {
     }
 }
 
+export class UserNotFoundException extends HttpException {
+    constructor(id: string) {
+        super(404, `User with ID: '${id}' not found`, {});
+    }
+}
+
 export class IncorrectCredentialsException extends HttpException {
     constructor() {
         super(403, `Incorrect user credentials`, {});
