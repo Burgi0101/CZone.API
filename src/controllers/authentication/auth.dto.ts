@@ -1,6 +1,6 @@
 import { IsString, IsEmail, IsDateString } from "class-validator";
 
-class RegisterUserDto {
+class UserDto {
     @IsEmail()
     public email: string;
 
@@ -20,4 +20,4 @@ class RegisterUserDto {
     public password: string;
 }
 
-export default RegisterUserDto;
+export default UserDto;

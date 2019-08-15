@@ -1,6 +1,6 @@
 import { IsString, IsArray, IsNumber } from "class-validator";
 
-class CreateClubDto {
+class ClubDto {
     @IsString()
     public name: string;
 
@@ -14,4 +14,4 @@ class CreateClubDto {
     public type: string;
 }
 
-export default CreateClubDto;
+export default ClubDto;
