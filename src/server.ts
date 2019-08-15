@@ -1,11 +1,11 @@
 import App from "./app";
 
-import UserController from "./controllers/users/user.controller";
 import ClubsController from "./controllers/clubs/clubs.controller";
+import AuthenticationController from "./controllers/authentication/auth.controller";
 
 const app = new App(
   [
-    new UserController(),
+    new AuthenticationController(),
     new ClubsController()
   ],
   3000,

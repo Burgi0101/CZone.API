@@ -1,14 +1,14 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import { IController } from "../../interfaces/controller.interface";
-import User, { UserModel } from "./users.model";
+import User, { UserModel } from "./auth.model";
 import validationMiddleware from "../../middleware/validation.middleware";
-import RegisterUserDto from "./users.dto";
+import RegisterUserDto from "./auth.dto";
 
-import { UserAlreadyExistingException, IncorrectCredentialsException } from "./users.exceptions";
+import { UserAlreadyExistingException, IncorrectCredentialsException } from "./auth.exceptions";
 
-class UserController implements IController {
-    public path = "/users";
+class AuthenticationController implements IController {
+    public path = "/auth";
     public router = Router();
 
     constructor() {
@@ -20,7 +20,7 @@ class UserController implements IController {
         this.router.post(`${this.path}/login`, this.login);
     }
 
-    register = async (req: Request, res: Response, next: NextFunction) => {
+    private register = async (req: Request, res: Response, next: NextFunction) => {
         const user = new User({
             email: req.body.email,
             nickname: req.body.nickname,
@@ -44,7 +44,7 @@ class UserController implements IController {
 
     }
 
-    login = async (req: Request, res: Response, next: NextFunction) => {
+    private login = async (req: Request, res: Response, next: NextFunction) => {
         User
             .findOne({ email: req.body.email })
             .then((user: UserModel) => {
@@ -61,4 +61,4 @@ class UserController implements IController {
     }
 }
 
-export default UserController;
+export default AuthenticationController;
