@@ -35,7 +35,9 @@ class ClubsController implements IController {
                 .find({})
                 .then((clubs) => {
                     res.send(clubs.reduce((clubMap, club: IClub) => {
-                        clubMap[club._id] = club;
+                        if (club.type !== 1) {
+                            clubMap[club._id] = club;
+                        }
                         return clubMap;
                     }, {}));
                 })
