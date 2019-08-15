@@ -9,7 +9,6 @@ import { IController } from "./interfaces/controller.interface";
 
 class App {
     public app: Application;
-    public port: number;
 
     constructor(controllers: IController[]) {
         this.app = express();
