@@ -13,7 +13,7 @@ import UserDto from "./auth.dto";
 import { UserAlreadyExistingException, IncorrectCredentialsException } from "./auth.exceptions";
 
 
-class AuthenticationController implements IController {
+export class AuthenticationController implements IController {
     public path = "/auth";
     public router = Router();
 
@@ -82,7 +82,7 @@ class AuthenticationController implements IController {
     }
 
     private createToken(user: UserModel): ITokenData {
-        const expiresIn = 60 * 60; // an hour
+        const expiresIn = parseInt(process.env.AUTH_TOKEN_EXPIRY_IN_SEC);
         const secret = process.env.SECRET;
         const dataStoredInToken: IDataStoredInToken = {
             _id: user._id,
@@ -97,5 +97,3 @@ class AuthenticationController implements IController {
         return res.cookie("Authorization", tokenData.token, { httpOnly: true, maxAge: tokenData.expiresIn });
     }
 }
-
-export default AuthenticationController;

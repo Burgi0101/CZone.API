@@ -13,7 +13,7 @@ import Club, { ClubModel } from "./clubs.model";
 import { ClubNotFoundException } from "./clubs.exceptions";
 
 
-class ClubsController implements IController {
+export class ClubsController implements IController {
     public path = "/clubs";
     public router = Router();
 
@@ -114,5 +114,3 @@ class ClubsController implements IController {
             .catch(err => next(new ClubNotFoundException(req.params.id)));
     }
 }
-
-export default ClubsController;
