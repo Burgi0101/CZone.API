@@ -8,6 +8,12 @@ export class UserAlreadyExistingException extends HttpException {
 
 export class IncorrectCredentialsException extends HttpException {
     constructor() {
-        super(403, `Incorrect user credentials!`, {});
+        super(403, `Incorrect user credentials`, {});
+    }
+}
+
+export class NotAuthorizedException extends HttpException {
+    constructor() {
+        super(403, `Not authorized`, {});
     }
 }
