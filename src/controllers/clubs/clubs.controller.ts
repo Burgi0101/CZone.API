@@ -25,7 +25,7 @@ class ClubsController implements IController {
         this.router.delete(`${this.path}/:id`, this.deleteClub);
     }
 
-    getClubs = async (req: Request, res: Response) => {
+    private getClubs = async (req: Request, res: Response) => {
         try {
             Club
                 .find({})
@@ -42,7 +42,7 @@ class ClubsController implements IController {
         }
     }
 
-    getClubById = async (req: Request, res: Response, next: NextFunction) => {
+    private getClubById = async (req: Request, res: Response, next: NextFunction) => {
         Club
             .findById(req.params.id)
             .then((club: ClubModel | null) => {
@@ -51,7 +51,7 @@ class ClubsController implements IController {
             .catch(err => next(new ClubNotFoundException(req.params.id)));
     }
 
-    createClub = async (req: Request, res: Response) => {
+    private createClub = async (req: Request, res: Response) => {
         try {
             const club = new Club({
                 name: req.body.name,
@@ -74,7 +74,7 @@ class ClubsController implements IController {
         }
     }
 
-    updateClub = async (req: Request, res: Response, next: NextFunction) => {
+    private updateClub = async (req: Request, res: Response, next: NextFunction) => {
 
         const updatedClub: IClub = {
             _id: req.params.id,
@@ -96,7 +96,7 @@ class ClubsController implements IController {
             .catch(err => next(new ClubNotFoundException(req.params.id)));
     }
 
-    deleteClub = async (req: Request, res: Response, next: NextFunction) => {
+    private deleteClub = async (req: Request, res: Response, next: NextFunction) => {
         Club
             .findByIdAndDelete(req.params.id)
             .then((club: ClubModel | null) => {
