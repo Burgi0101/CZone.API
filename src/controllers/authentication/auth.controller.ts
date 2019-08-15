@@ -1,11 +1,12 @@
 import { Router, Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+import validationMiddleware from "../../middleware/validation.middleware";
+
 import { IController } from "../../interfaces/controller.interface";
 import { ITokenData, IDataStoredInToken } from "./auth.interfaces";
 
 import User, { UserModel } from "./auth.model";
-import validationMiddleware from "../../middleware/validation.middleware";
 import UserDto from "./auth.dto";
 
 import { UserAlreadyExistingException, IncorrectCredentialsException } from "./auth.exceptions";
@@ -71,7 +72,7 @@ class AuthenticationController implements IController {
     }
 
     private logout = async (req: Request, res: Response) => {
-        res.setHeader("Set-Cookie", ["Authorization=;Max-age=0"]);
+        this.setAuthCookie(res, { token: "", expiresIn: 0 });
         res.sendStatus(200);
     }
 
@@ -91,7 +92,5 @@ class AuthenticationController implements IController {
         return res.cookie("Authorization", tokenData.token, { httpOnly: true, maxAge: tokenData.expiresIn });
     }
 }
-
-
 
 export default AuthenticationController;

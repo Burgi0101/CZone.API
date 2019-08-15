@@ -4,6 +4,7 @@ import cookieParser = require("cookie-parser");
 import "dotenv/config";
 
 import errorHandler from "./middleware/error.middleware";
+
 import { IController } from "./interfaces/controller.interface";
 
 class App {

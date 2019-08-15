@@ -1,6 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 
-import { IAuthenticatedRequest } from "../../interfaces/request.interface";
+import authMiddleware from "../../middleware/auth.middleware";
+import validationMiddleware from "../../middleware/validation.middleware";
+
+import { IAuthenticatedRequest } from "../../interfaces/requests.interface";
 import { IController } from "../../interfaces/controller.interface";
 import { IClub } from "./clubs.interfaces";
 
@@ -8,9 +11,6 @@ import ClubDto from "./clubs.dto";
 import Club, { ClubModel } from "./clubs.model";
 
 import { ClubNotFoundException } from "./clubs.exceptions";
-
-import validationMiddleware from "../../middleware/validation.middleware";
-import authMiddleware from "../../middleware/auth.middleware";
 
 
 class ClubsController implements IController {
@@ -24,6 +24,8 @@ class ClubsController implements IController {
     public initializeRoutes() {
         this.router.get(`${this.path}`, this.getClubs);
         this.router.get(`${this.path}/:id`, this.getClubById);
+
+        /* AUTHENTICATED ROUTES USER NEEDS TO PASS VALID TOKEN */
         this.router.post(`${this.path}`, authMiddleware, validationMiddleware(ClubDto), this.createClub);
         this.router.put(`${this.path}/:id`, authMiddleware, validationMiddleware(ClubDto, true), this.updateClub);
         this.router.delete(`${this.path}/:id`, authMiddleware, this.deleteClub);
