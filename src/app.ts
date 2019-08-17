@@ -7,6 +7,7 @@ import "dotenv/config";
 import errorHandler from "./middleware/error.middleware";
 
 import { IController } from "./interfaces/controller.interface";
+import { CORSException } from "./app.exceptions";
 
 class App {
     public app: Application;
@@ -36,7 +37,23 @@ class App {
     private initializeMiddlewares() {
         this.app.use(express.json());
         this.app.use(cookieParser());
-        this.app.use(cors());
+        this.app.use(
+            cors(this.initializeCorsOptions([
+                "http://localhost"
+            ]))
+        );
+    }
+
+    private initializeCorsOptions(whitelist: string[]): object {
+        return {
+            origin(origin, callback) {
+                if (!origin || whitelist.indexOf(origin) !== -1) {
+                    callback(null, true);
+                } else {
+                    callback(new CORSException());
+                }
+            }
+        };
     }
 
     private initializeErrorHandler() {

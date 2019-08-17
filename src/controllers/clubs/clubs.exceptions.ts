@@ -1,4 +1,5 @@
-import { HttpException } from "../../middleware/error.middleware";
+import { HttpException } from "../../app.exceptions";
+
 
 export class ClubNotFoundException extends HttpException {
     constructor(id: string) {

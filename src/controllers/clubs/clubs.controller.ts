@@ -7,8 +7,8 @@ import { IAuthenticatedRequest } from "../../interfaces/requests.interface";
 import { IController } from "../../interfaces/controller.interface";
 import { IClub } from "./clubs.interfaces";
 
-import ClubDto from "./clubs.dto";
 import Club, { ClubModel } from "./clubs.model";
+import ClubDto from "./clubs.dto";
 
 import { ClubNotFoundException } from "./clubs.exceptions";
 

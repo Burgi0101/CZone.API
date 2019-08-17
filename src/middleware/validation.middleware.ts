@@ -2,7 +2,7 @@ import { RequestHandler, Request, Response, NextFunction } from "express";
 import { plainToClass } from "class-transformer";
 import { validate, ValidationError } from "class-validator";
 
-import { HttpException } from "./error.middleware";
+import { HttpException } from "../app.exceptions";
 
 
 function validationMiddleware<T>(type: any, skipMissingProperties = false): RequestHandler {
