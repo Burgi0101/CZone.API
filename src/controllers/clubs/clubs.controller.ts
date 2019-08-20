@@ -11,11 +11,13 @@ import Club, { ClubModel } from "./clubs.model";
 import ClubDto from "./clubs.dto";
 
 import { ClubNotFoundException } from "./clubs.exceptions";
+import { ClubsService } from "./clubs.service";
 
 
 export class ClubsController implements IController {
     public path = "/clubs";
     public router = Router();
+    private clubsSerivce = new ClubsService();
 
     constructor() {
         this.initializeRoutes();
@@ -31,32 +33,33 @@ export class ClubsController implements IController {
         this.router.delete(`${this.path}/:id`, authMiddleware, this.deleteClub);
     }
 
-    private getClubs = async (req: Request, res: Response) => {
+    private getClubs = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            Club
-                .find({})
-                .then((clubs) => {
-                    res.send(clubs.reduce((clubMap, club: IClub) => {
-                        if (club.type !== 1) {
-                            clubMap[club._id] = club;
-                        }
-                        return clubMap;
-                    }, {}));
-                })
-                .catch(err => res.send(err));
+            const clubs = await this.clubsSerivce.getClubs();
+
+            if (clubs) {
+                res.send(clubs.reduce((clubMap, club: IClub) => {
+                    if (club.type !== 1) {
+                        clubMap[club._id] = club;
+                    }
+                    return clubMap;
+                }, {}));
+            }
         }
-        catch (error) {
-            res.status(500).send(error.toString());
+        catch (err) {
+            next(err);
         }
     }
 
     private getClubById = async (req: Request, res: Response, next: NextFunction) => {
-        Club
-            .findById(req.params.id)
-            .then((club: ClubModel | null) => {
-                res.send(club);
-            })
-            .catch(err => next(new ClubNotFoundException(req.params.id)));
+        try {
+            const club = await this.clubsSerivce.getClubById(req.params.id);
+
+            res.send(club);
+        }
+        catch (err) {
+            next(err);
+        }
     }
 
     private createClub = async (req: IAuthenticatedRequest, res: Response) => {
