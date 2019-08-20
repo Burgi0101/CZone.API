@@ -15,10 +15,15 @@ export class AuthenticationService {
             user.password = await bcrypt.hash(user.password, 10);
             const persistedUser = await user.save();
 
-            return {
-                userToken: persistedUser.id,
-                authToken: this.createAuthToken(persistedUser)
-            };
+            if (persistedUser) {
+                return {
+                    userToken: persistedUser.id,
+                    authToken: this.createAuthToken(persistedUser)
+                };
+            }
+            else {
+                throw new UserAlreadyExistingException(user.email);
+            }
         }
         catch (err) {
             switch (err.code) {
