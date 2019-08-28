@@ -7,9 +7,10 @@ import "dotenv/config";
 import errorHandler from "./middleware/error.middleware";
 
 import { IController } from "./interfaces/controller.interface";
+
 import { CORSException } from "./app.exceptions";
 
-class App {
+export class App {
     public app: Application;
 
     constructor(controllers: IController[]) {
@@ -83,5 +84,3 @@ class App {
         });
     }
 }
-
-export default App;

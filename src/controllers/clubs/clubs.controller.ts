@@ -25,7 +25,7 @@ export class ClubsController implements IController {
         this.router.get(`${this.path}`, this.getClubs);
         this.router.get(`${this.path}/:id`, this.getClubById);
 
-        /* AUTHENTICATED ROUTES USER NEEDS TO PASS VALID TOKEN */
+        /* AUTHENTICATED ROUTES, USER NEEDS TO PASS VALID AUTH-TOKEN */
         this.router.post(`${this.path}`, authMiddleware, validationMiddleware(ClubDto), this.createClub);
         this.router.put(`${this.path}/:id`, authMiddleware, validationMiddleware(ClubDto, true), this.updateClub);
         this.router.delete(`${this.path}/:id`, authMiddleware, this.deleteClub);
