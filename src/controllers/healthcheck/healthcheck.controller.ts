@@ -4,9 +4,9 @@ import { IController } from "../../interfaces/controller.interface";
 import { HealthcheckService } from "./healthcheck.service";
 
 export class HealthcheckController implements IController {
-    path = "/health";
-    router = Router();
-    healthcheckService = new HealthcheckService();
+    public path = "/health";
+    public router = Router();
+    private healthcheckService = new HealthcheckService();
 
     constructor() {
         this.initializeRoutes();
