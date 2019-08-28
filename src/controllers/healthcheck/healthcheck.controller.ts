@@ -1,11 +1,12 @@
 import { Router, Request, Response } from "express";
-import mongoose from "mongoose";
 
 import { IController } from "../../interfaces/controller.interface";
+import { HealthcheckService } from "./healthcheck.service";
 
 export class HealthcheckController implements IController {
     path = "/health";
     router = Router();
+    healthcheckService = new HealthcheckService();
 
     constructor() {
         this.initializeRoutes();
@@ -17,7 +18,7 @@ export class HealthcheckController implements IController {
 
     private getHealth = async (req: Request, res: Response) => {
         try {
-            const isDbConnectionUp: boolean = await Boolean(mongoose.connection.readyState);
+            const isDbConnectionUp = await this.healthcheckService.checkDbConnection();
 
             res.send({
                 DatabaseConnection: {
