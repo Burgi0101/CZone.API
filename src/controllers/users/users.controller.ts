@@ -7,11 +7,13 @@ import { IController } from "../../interfaces/controller.interface";
 import User, { UserModel } from "../authentication/auth.model";
 
 import { UserNotFoundException } from "../authentication/auth.exceptions";
+import { UsersService } from "./users.service";
 
 
 export class UsersController implements IController {
     public path = "/users";
     public router = Router();
+    private usersService = new UsersService();
 
     constructor() {
         this.initializeRoutes();
@@ -22,13 +24,16 @@ export class UsersController implements IController {
     }
 
     private getUserById = async (req: Request, res: Response, next: NextFunction) => {
-        User
-            .findById(req.params.id)
-            .then((user: UserModel) => {
-                user.password = undefined;
+        try {
+            const user = await this.usersService.getUserById(req.params.id);
+
+            if (user) {
                 res.send(user);
-            })
-            .catch(err => next(new UserNotFoundException(req.params.id)));
+            }
+        }
+        catch (err) {
+            next(err);
+        }
     }
 
 }
