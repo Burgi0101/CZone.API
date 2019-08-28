@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 
 import authMiddleware from "../../middleware/auth.middleware";
 import validationMiddleware from "../../middleware/validation.middleware";
+import { ClubsService } from "./clubs.service";
 
 import { IAuthenticatedRequest } from "../../interfaces/requests.interface";
 import { IController } from "../../interfaces/controller.interface";
@@ -9,8 +10,6 @@ import { IClub } from "./clubs.interfaces";
 
 import Club from "./clubs.model";
 import ClubDto from "./clubs.dto";
-
-import { ClubsService } from "./clubs.service";
 
 
 export class ClubsController implements IController {

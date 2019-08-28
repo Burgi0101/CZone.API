@@ -1,6 +1,6 @@
 import { IUser } from "../authentication/auth.interfaces";
 
-import User, { UserModel } from "../authentication/auth.model";
+import User from "../authentication/auth.model";
 
 import { UserNotFoundException } from "../authentication/auth.exceptions";
 

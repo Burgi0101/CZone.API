@@ -1,13 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import authMiddleware from "../../middleware/auth.middleware";
+import { UsersService } from "./users.service";
 
 import { IController } from "../../interfaces/controller.interface";
-
-import User, { UserModel } from "../authentication/auth.model";
-
-import { UserNotFoundException } from "../authentication/auth.exceptions";
-import { UsersService } from "./users.service";
 
 
 export class UsersController implements IController {
@@ -35,5 +31,4 @@ export class UsersController implements IController {
             next(err);
         }
     }
-
 }

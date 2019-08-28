@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
 
-import { IController } from "../../interfaces/controller.interface";
 import { HealthcheckService } from "./healthcheck.service";
+
+import { IController } from "../../interfaces/controller.interface";
 
 export class HealthcheckController implements IController {
     public path = "/health";
