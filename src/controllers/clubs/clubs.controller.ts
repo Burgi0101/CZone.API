@@ -34,7 +34,7 @@ export class ClubsController implements IController {
 
     private getClubs = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const clubs = await this.clubsService.getClubs();
+            const clubs: IClub[] = await this.clubsService.getClubs();
 
             if (clubs) {
                 res.send(clubs.reduce((clubMap, club: IClub) => {
@@ -52,7 +52,7 @@ export class ClubsController implements IController {
 
     private getClubById = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const club = await this.clubsService.getClubById(req.params.id);
+            const club: IClub = await this.clubsService.getClubById(req.params.id);
 
             if (club) {
                 res.send(club);
@@ -72,7 +72,7 @@ export class ClubsController implements IController {
                 type: req.body.type
             });
 
-            const createResponse = await this.clubsService.createClub(club);
+            const createResponse: IClub = await this.clubsService.createClub(club);
 
             if (createResponse) {
                 res.send(createResponse);
@@ -93,7 +93,7 @@ export class ClubsController implements IController {
                 type: req.body.type
             };
 
-            const updateClubResponse = await this.clubsService.updateClub(club);
+            const updateClubResponse: IClub = await this.clubsService.updateClub(club);
 
             if (updateClubResponse) {
                 res.send(updateClubResponse);
@@ -107,7 +107,7 @@ export class ClubsController implements IController {
 
     private deleteClub = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const delteClubResponse = await this.clubsService.deleteClub(req.params.id);
+            const delteClubResponse: IClub = await this.clubsService.deleteClub(req.params.id);
 
             if (delteClubResponse) {
                 res.send(delteClubResponse);
