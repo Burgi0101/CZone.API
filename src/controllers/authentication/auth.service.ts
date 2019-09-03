@@ -11,17 +11,17 @@ import UserDto from "./auth.dto";
 
 export class AuthenticationService {
 
-    private userDocument: UserModel = new User();
-
     public async register(user: UserDto) {
         try {
-            this.userDocument.email = user.email;
-            this.userDocument.firstname = user.firstname;
-            this.userDocument.lastname = user.lastname;
-            this.userDocument.birthdate = user.birthdate;
-            this.userDocument.password = await bcrypt.hash(user.password, 10);
+            const userToRegister = new User({
+                email: user.email,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                birthdate: user.birthdate,
+                password: await bcrypt.hash(user.password, 10)
+            });
 
-            const persistedUser: UserModel = await this.userDocument.save();
+            const persistedUser: UserModel = await userToRegister.save();
 
             if (persistedUser) {
                 return {
