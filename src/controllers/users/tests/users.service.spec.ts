@@ -12,11 +12,10 @@ describe("The UsersService", () => {
     describe("when trying to get a not existing user", () => {
         it("should throw a UserNotFoundException", async () => {
 
-            const id = "5d6e043d82063d0d30e05a3";
+            const id = "MockedID";
 
             (User as any).findById.mockReturnValue(undefined);
 
-            const userService = new UsersService();
             await expect(usersService.getUserById(id))
                 .rejects.toMatchObject(new UserNotFoundException(id));
         });
@@ -25,7 +24,7 @@ describe("The UsersService", () => {
     describe("when trying to get an existing user by Id", () => {
         it("should return the user", async () => {
 
-            const id = "5d5c3e0fd4217f3a3c38d5ec";
+            const id = "MockedID";
 
             const userMock: UserDto = {
                 email: "georg.buurgstalller@gmx.at",
@@ -38,7 +37,6 @@ describe("The UsersService", () => {
 
             (User as any).findById.mockReturnValue(userMock);
 
-            const userService = new UsersService();
             await expect(usersService.getUserById(id)).resolves.toMatchObject({
                 ...userMock,
                 password: undefined
