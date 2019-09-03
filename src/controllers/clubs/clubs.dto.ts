@@ -8,10 +8,10 @@ class ClubDto {
     public category: string;
 
     @IsArray()
-    public managers: string;
+    public managers: string[];
 
     @IsNumber()
-    public type: string;
+    public type: number;
 }
 
 export default ClubDto;

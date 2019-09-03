@@ -1,5 +1,3 @@
-import { IClub } from "./clubs.interfaces";
-
 import Club, { ClubModel } from "./clubs.model";
 
 import { ClubNotFoundException } from "./clubs.exceptions";
@@ -49,7 +47,7 @@ export class ClubsService {
         }
     }
 
-    public async updateClub(club: IClub) {
+    public async updateClub(club: ClubModel) {
         try {
             const updatedClub = await Club.findByIdAndUpdate(
                 club._id,

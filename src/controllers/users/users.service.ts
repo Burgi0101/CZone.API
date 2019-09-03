@@ -1,14 +1,13 @@
-import { IUser } from "../authentication/auth.interfaces";
-
 import User from "../authentication/auth.model";
 
 import { UserNotFoundException } from "../authentication/auth.exceptions";
+import UserDto from "../authentication/auth.dto";
 
 export class UsersService {
 
     public async getUserById(id: string) {
         try {
-            const user: IUser = await User.findById(id);
+            const user: UserDto = await User.findById(id);
 
             if (user) {
                 user.password = undefined;

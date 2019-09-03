@@ -1,7 +1,6 @@
 import { Request } from "express";
-
-import { IUser } from "../controllers/authentication/auth.interfaces";
+import UserDto from "../controllers/authentication/auth.dto";
 
 export interface IAuthenticatedRequest extends Request {
-    user: IUser;
+    user: UserDto;
 }

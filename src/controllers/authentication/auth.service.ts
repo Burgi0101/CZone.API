@@ -6,14 +6,22 @@ import { ITokenData, IDataStoredInToken } from "./auth.interfaces";
 import User, { UserModel } from "./auth.model";
 
 import { UserAlreadyExistingException, IncorrectCredentialsException } from "./auth.exceptions";
+import UserDto from "./auth.dto";
 
 
 export class AuthenticationService {
 
-    public async register(user: UserModel) {
+    private userDocument: UserModel = new User();
+
+    public async register(user: UserDto) {
         try {
-            user.password = await bcrypt.hash(user.password, 10);
-            const persistedUser: UserModel = await user.save();
+            this.userDocument.email = user.email;
+            this.userDocument.firstname = user.firstname;
+            this.userDocument.lastname = user.lastname;
+            this.userDocument.birthdate = user.birthdate;
+            this.userDocument.password = await bcrypt.hash(user.password, 10);
+
+            const persistedUser: UserModel = await this.userDocument.save();
 
             if (persistedUser) {
                 return {
