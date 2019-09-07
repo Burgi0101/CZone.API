@@ -4,9 +4,10 @@ import bcrypt from "bcrypt";
 import { ITokenData, IDataStoredInToken } from "./auth.interfaces";
 
 import User, { UserModel } from "./auth.model";
+import UserDto from "./auth.dto";
 
 import { UserAlreadyExistingException, IncorrectCredentialsException } from "./auth.exceptions";
-import UserDto from "./auth.dto";
+
 
 
 export class AuthenticationService {
@@ -21,13 +22,17 @@ export class AuthenticationService {
                 password: await bcrypt.hash(user.password, 10)
             });
 
-            const persistedUser: UserModel = await userToRegister.save();
+            const userWithMailExisting: UserModel = await User.findOne({ email: userToRegister.email });
 
-            if (persistedUser) {
-                return {
-                    userToken: persistedUser.id,
-                    authToken: this.createAuthToken(persistedUser)
-                };
+            if (!userWithMailExisting) {
+                const persistedUser: UserModel = await userToRegister.save();
+
+                if (persistedUser) {
+                    return {
+                        userToken: persistedUser.id,
+                        authToken: this.createAuthToken(persistedUser)
+                    };
+                }
             }
             else {
                 throw new UserAlreadyExistingException(user.email);
@@ -47,7 +52,6 @@ export class AuthenticationService {
 
             if (userToLogin) {
                 const isPasswordMatching = await bcrypt.compare(password, userToLogin.password);
-
                 if (isPasswordMatching) {
                     return {
                         userToken: userToLogin.id,
