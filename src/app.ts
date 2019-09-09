@@ -5,7 +5,7 @@ import cookieParser = require("cookie-parser");
 import createLocaleMiddleware from "express-locale";
 import "dotenv/config";
 
-import errorHandler from "./middleware/error.middleware";
+import { errorHandler } from "./middleware/error.middleware";
 
 import { IController } from "./interfaces/controller.interface";
 

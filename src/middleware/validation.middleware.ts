@@ -5,7 +5,7 @@ import { validate, ValidationError } from "class-validator";
 import { HttpException } from "../app.exceptions";
 
 
-function validationMiddleware<T>(type: any, skipMissingProperties = false): RequestHandler {
+export function validationMiddleware<T>(type: any, skipMissingProperties = false): RequestHandler {
     return (req: Request, res: Response, next: NextFunction) => {
         validate(plainToClass(type, req.body), { skipMissingProperties })
             .then((errors: ValidationError[]) => {
@@ -21,5 +21,3 @@ function validationMiddleware<T>(type: any, skipMissingProperties = false): Requ
             });
     };
 }
-
-export default validationMiddleware;

@@ -4,6 +4,7 @@ import { HealthcheckService } from "./healthcheck.service";
 
 import { IController } from "../../interfaces/controller.interface";
 
+
 export class HealthcheckController implements IController {
     public path = "/health";
     public router = Router();

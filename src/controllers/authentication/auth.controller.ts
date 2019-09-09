@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 
-import validationMiddleware from "../../middleware/validation.middleware";
+import { validationMiddleware } from "../../middleware/validation.middleware";
 import { AuthenticationService } from "./auth.service";
 
 import { IController } from "../../interfaces/controller.interface";
@@ -9,7 +9,6 @@ import { ITokenData } from "./auth.interfaces";
 import { User } from "./auth.model";
 import UserDto from "./auth.dto";
 import { IRequest } from "../../interfaces/requests.interface";
-
 
 
 export class AuthenticationController implements IController {

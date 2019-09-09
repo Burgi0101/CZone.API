@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 
-import authMiddleware from "../../middleware/auth.middleware";
-import validationMiddleware from "../../middleware/validation.middleware";
+import { authMiddleware } from "../../middleware/auth.middleware";
+import { validationMiddleware } from "../../middleware/validation.middleware";
 import { ClubsService } from "./clubs.service";
 
 import { IAuthenticatedRequest } from "../../interfaces/requests.interface";

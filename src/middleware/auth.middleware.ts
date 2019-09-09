@@ -9,7 +9,7 @@ import { User } from "../controllers/authentication/auth.model";
 import { NotAuthorizedException } from "../controllers/authentication/auth.exceptions";
 
 
-async function authMiddleware(req: IAuthenticatedRequest, res: Response, next: NextFunction) {
+export async function authMiddleware(req: IAuthenticatedRequest, res: Response, next: NextFunction) {
     const authToken = req.headers.authorization;
 
     if (authToken) {
@@ -33,5 +33,3 @@ async function authMiddleware(req: IAuthenticatedRequest, res: Response, next: N
         next(new NotAuthorizedException(""));
     }
 }
-
-export default authMiddleware;

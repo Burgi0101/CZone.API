@@ -1,6 +1,6 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Response, NextFunction } from "express";
 
-import authMiddleware from "../../middleware/auth.middleware";
+import { authMiddleware } from "../../middleware/auth.middleware";
 import { UsersService } from "./users.service";
 
 import { IController } from "../../interfaces/controller.interface";
