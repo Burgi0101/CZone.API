@@ -1,13 +1,16 @@
-import Club, { ClubModel } from "./clubs.model";
+import { ClubModel, Club } from "./clubs.model";
 
 import { ClubNotFoundException } from "./clubs.exceptions";
+import { TranslationService } from "../translation/translation.service";
 
 
 export class ClubsService {
 
+    translationService = new TranslationService();
+
     public async getClubs() {
         try {
-            const clubs = await Club.find({});
+            const clubs: ClubModel[] = await Club.find({});
 
             if (clubs) {
                 return clubs;
@@ -18,25 +21,25 @@ export class ClubsService {
         }
     }
 
-    public async getClubById(id: string) {
+    public async getClubById(id: string, lang = "en") {
         try {
-            const club = await Club.findById(id);
+            const club: ClubModel = await Club.findById(id);
 
             if (club) {
                 return club;
             }
             else {
-                throw new ClubNotFoundException(id);
+                throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
             }
         }
         catch (err) {
-            throw new ClubNotFoundException(id);
+            throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
         }
     }
 
-    public async createClub(club: ClubModel) {
+    public async createClub(club: ClubModel, lang = "en") {
         try {
-            const persistedClub = await club.save();
+            const persistedClub: ClubModel = await club.save();
 
             if (persistedClub) {
                 return persistedClub;
@@ -47,9 +50,9 @@ export class ClubsService {
         }
     }
 
-    public async updateClub(club: ClubModel) {
+    public async updateClub(club: ClubModel, lang = "en") {
         try {
-            const updatedClub = await Club.findByIdAndUpdate(
+            const updatedClub: ClubModel = await Club.findByIdAndUpdate(
                 club._id,
                 club,
                 { new: true }
@@ -59,27 +62,27 @@ export class ClubsService {
                 return updatedClub;
             }
             else {
-                throw new ClubNotFoundException(club._id);
+                throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
             }
         }
         catch (err) {
-            throw new ClubNotFoundException(club._id);
+            throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
         }
     }
 
-    public async deleteClub(id: string) {
+    public async deleteClub(id: string, lang = "en") {
         try {
-            const deletedClub = await Club.findByIdAndDelete(id);
+            const deletedClub: ClubModel = await Club.findByIdAndDelete(id);
 
             if (deletedClub) {
                 return deletedClub;
             }
             else {
-                throw new ClubNotFoundException(id);
+                throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
             }
         }
         catch (err) {
-            throw new ClubNotFoundException(id);
+            throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
         }
     }
 }

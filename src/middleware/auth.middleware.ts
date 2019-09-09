@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { IDataStoredInToken } from "../controllers/authentication/auth.interfaces";
 import { IAuthenticatedRequest } from "../interfaces/requests.interface";
 
-import UserModel from "../controllers/authentication/auth.model";
+import { User } from "../controllers/authentication/auth.model";
 
 import { NotAuthorizedException } from "../controllers/authentication/auth.exceptions";
 
@@ -17,18 +17,20 @@ async function authMiddleware(req: IAuthenticatedRequest, res: Response, next: N
         try {
             const verificationResponse = jwt.verify(authToken, secret) as IDataStoredInToken;
             const id = verificationResponse._id;
-            const user = await UserModel.findById(id);
+
+            const user = await User.findById(id);
+
             if (user) {
                 req.user = user;
                 next();
             } else {
-                next(new NotAuthorizedException());
+                next(new NotAuthorizedException(""));
             }
         } catch (error) {
-            next(new NotAuthorizedException());
+            next(new NotAuthorizedException(""));
         }
     } else {
-        next(new NotAuthorizedException());
+        next(new NotAuthorizedException(""));
     }
 }
 

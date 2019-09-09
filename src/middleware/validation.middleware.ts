@@ -10,7 +10,6 @@ function validationMiddleware<T>(type: any, skipMissingProperties = false): Requ
         validate(plainToClass(type, req.body), { skipMissingProperties })
             .then((errors: ValidationError[]) => {
                 if (errors.length > 0) {
-                    // const message = errors.map((error: ValidationError) => Object.values(error));
                     const errorObject = errors.reduce((errorMap, error: ValidationError) => {
                         errorMap[error.property] = Object.values(error.constraints);
                         return errorMap;

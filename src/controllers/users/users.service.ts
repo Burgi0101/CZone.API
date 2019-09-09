@@ -1,11 +1,16 @@
-import User from "../authentication/auth.model";
+import { TranslationService } from "../translation/translation.service";
+
+import { User } from "../authentication/auth.model";
 
 import { UserNotFoundException } from "../authentication/auth.exceptions";
 import UserDto from "../authentication/auth.dto";
 
+
 export class UsersService {
 
-    public async getUserById(id: string) {
+    translationService = new TranslationService();
+
+    public async getUserById(id: string, lang: string) {
         try {
             const user: UserDto = await User.findById(id);
 
@@ -14,11 +19,11 @@ export class UsersService {
                 return user;
             }
             else {
-                throw new UserNotFoundException(id);
+                throw new UserNotFoundException(await this.translationService.getTranslations(lang, "userNotFound"));
             }
         }
         catch (err) {
-            throw new UserNotFoundException(id);
+            throw new UserNotFoundException(await this.translationService.getTranslations(lang, "userNotFound"));
         }
     }
 }

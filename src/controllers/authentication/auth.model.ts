@@ -7,6 +7,7 @@ export type UserModel = Document & {
     lastname: string;
     birthdate: Date;
     password: string;
+    language: string;
 };
 
 export const UserSchema = new Schema({
@@ -15,7 +16,8 @@ export const UserSchema = new Schema({
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     birthdate: { type: Date, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    language: { type: String, required: true }
 });
 
-export default model<UserModel>("User", UserSchema);
+export const User = model<UserModel>("User", UserSchema, "users");

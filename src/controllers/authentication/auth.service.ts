@@ -3,14 +3,17 @@ import bcrypt from "bcrypt";
 
 import { ITokenData, IDataStoredInToken } from "./auth.interfaces";
 
-import User, { UserModel } from "./auth.model";
+import { User, UserModel } from "./auth.model";
 import UserDto from "./auth.dto";
 
 import { UserAlreadyExistingException, IncorrectCredentialsException } from "./auth.exceptions";
+import { TranslationService } from "../translation/translation.service";
 
 
 
 export class AuthenticationService {
+
+    translationService = new TranslationService();
 
     public async register(user: UserDto) {
         try {
@@ -19,7 +22,8 @@ export class AuthenticationService {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 birthdate: user.birthdate,
-                password: await bcrypt.hash(user.password, 10)
+                password: await bcrypt.hash(user.password, 10),
+                language: user.language
             });
 
             const userWithMailExisting: UserModel = await User.findOne({ email: userToRegister.email });
@@ -35,18 +39,18 @@ export class AuthenticationService {
                 }
             }
             else {
-                throw new UserAlreadyExistingException(user.email);
+                throw new UserAlreadyExistingException(await this.translationService.getTranslations(user.language, "userAlreadyExisting"));
             }
         }
         catch (err) {
             switch (err.code) {
-                case 11000: throw new UserAlreadyExistingException(user.email);
+                case 11000: throw new UserAlreadyExistingException(await this.translationService.getTranslations(user.language, "userAlreadyExisting"));
                 default: throw err;
             }
         }
     }
 
-    public async login(email: string, password: string) {
+    public async login(email: string, password: string, lang = "en") {
         try {
             const userToLogin: UserModel = await User.findOne({ email });
 
@@ -59,15 +63,15 @@ export class AuthenticationService {
                     };
                 }
                 else {
-                    throw new IncorrectCredentialsException();
+                    throw new IncorrectCredentialsException(await this.translationService.getTranslations(lang, "incorrectCredentials"));
                 }
             }
             else {
-                throw new IncorrectCredentialsException();
+                throw new IncorrectCredentialsException(await this.translationService.getTranslations(lang, "incorrectCredentials"));
             }
         }
         catch (err) {
-            throw new IncorrectCredentialsException();
+            throw err;
         }
     }
 

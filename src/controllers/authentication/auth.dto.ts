@@ -18,6 +18,9 @@ class UserDto {
 
     @IsString()
     public password: string;
+
+    @IsString()
+    public language: string;
 }
 
 export default UserDto;

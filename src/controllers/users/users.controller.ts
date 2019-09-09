@@ -4,6 +4,7 @@ import authMiddleware from "../../middleware/auth.middleware";
 import { UsersService } from "./users.service";
 
 import { IController } from "../../interfaces/controller.interface";
+import { IAuthenticatedRequest } from "../../interfaces/requests.interface";
 
 
 export class UsersController implements IController {
@@ -19,9 +20,9 @@ export class UsersController implements IController {
         this.router.get(`${this.path}/:id`, authMiddleware, this.getUserById);
     }
 
-    private getUserById = async (req: Request, res: Response, next: NextFunction) => {
+    private getUserById = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            const user = await this.usersService.getUserById(req.params.id);
+            const user = await this.usersService.getUserById(req.params.id, req.user.language);
 
             if (user) {
                 res.send(user);

@@ -1,8 +1,10 @@
 import { UsersService } from "../users.service";
-import User from "../../authentication/auth.model";
+import { User } from "../../authentication/auth.model";
 import UserDto from "../../authentication/auth.dto";
 import { UserNotFoundException } from "../../authentication/auth.exceptions";
+import { TranslationService } from "../../translation/translation.service";
 
+jest.mock("../../translation/translation.service");
 (User as any).findById = jest.fn();
 
 describe("The UsersService", () => {
@@ -13,11 +15,15 @@ describe("The UsersService", () => {
         it("should throw a UserNotFoundException", async () => {
 
             const id = "MockedID";
+            const lang = "en";
 
             (User as any).findById.mockReturnValue(undefined);
+            jest.spyOn(TranslationService.prototype, "getTranslations")
+                .mockImplementationOnce(() => Promise.resolve(""));
 
-            await expect(usersService.getUserById(id))
-                .rejects.toMatchObject(new UserNotFoundException(id));
+
+            await expect(usersService.getUserById(id, lang))
+                .rejects.toMatchObject(new UserNotFoundException(""));
         });
     });
 
@@ -32,12 +38,13 @@ describe("The UsersService", () => {
                 firstname: "Georg",
                 lastname: "Burgstaller",
                 birthdate: new Date(),
-                password: "Testing123!"
+                password: "Testing123!",
+                language: "en"
             };
 
             (User as any).findById.mockReturnValue(userMock);
 
-            await expect(usersService.getUserById(id)).resolves.toMatchObject({
+            await expect(usersService.getUserById(id, userMock.language)).resolves.toMatchObject({
                 ...userMock,
                 password: undefined
             });

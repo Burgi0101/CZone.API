@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser = require("cookie-parser");
+import createLocaleMiddleware from "express-locale";
 import "dotenv/config";
 
 import errorHandler from "./middleware/error.middleware";
@@ -43,6 +44,10 @@ export class App {
                 "http://localhost"
             ]))
         );
+        this.app.use(createLocaleMiddleware({
+            priority: ["accept-language", "default"],
+            default: "de_DE"
+        }));
     }
 
     private initializeCorsOptions(whitelist: string[]): object {

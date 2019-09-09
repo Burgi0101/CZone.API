@@ -14,4 +14,4 @@ export const ClubSchema = new Schema({
     type: { type: Number, required: true }
 });
 
-export default model<ClubModel>("Club", ClubSchema);
+export const Club = model<ClubModel>("Club", ClubSchema);

@@ -6,8 +6,10 @@ import { AuthenticationService } from "./auth.service";
 import { IController } from "../../interfaces/controller.interface";
 import { ITokenData } from "./auth.interfaces";
 
-import User from "./auth.model";
+import { User } from "./auth.model";
 import UserDto from "./auth.dto";
+import { IRequest } from "../../interfaces/requests.interface";
+
 
 
 export class AuthenticationController implements IController {
@@ -25,7 +27,7 @@ export class AuthenticationController implements IController {
         this.router.post(`${this.path}/logout`, this.logout);
     }
 
-    private register = async (req: Request, res: Response, next: NextFunction) => {
+    private register = async (req: IRequest, res: Response, next: NextFunction) => {
         try {
             const user = new User({
                 email: req.body.email,
@@ -33,7 +35,8 @@ export class AuthenticationController implements IController {
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 birthdate: req.body.birthdate,
-                password: req.body.password
+                password: req.body.password,
+                language: req.body.language || req.locale.language
             });
 
             const registrationResponse = await this.authenticationService.register(user);
@@ -46,11 +49,12 @@ export class AuthenticationController implements IController {
         catch (err) { next(err); }
     }
 
-    private login = async (req: Request, res: Response, next: NextFunction) => {
+    private login = async (req: IRequest, res: Response, next: NextFunction) => {
         try {
             const loginResponse = await this.authenticationService.login(
                 req.body.email,
-                req.body.password
+                req.body.password,
+                req.body.language || req.locale.language
             );
 
             if (loginResponse) {
@@ -58,7 +62,9 @@ export class AuthenticationController implements IController {
                 res.send({ token: loginResponse.userToken });
             }
         }
-        catch (err) { next(err); }
+        catch (err) {
+            next(err);
+        }
     }
 
     private logout = async (req: Request, res: Response) => {
