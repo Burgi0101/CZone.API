@@ -9,6 +9,6 @@ export class ClubNotFoundException extends HttpException {
 
 export class NotClubManagerException extends HttpException {
     constructor(message: string) {
-        super(403, message || "Only club managers can delete a club", {});
+        super(403, message || "Only club managers can change or delete a club", {});
     }
 }

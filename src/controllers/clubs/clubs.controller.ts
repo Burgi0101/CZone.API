@@ -83,15 +83,17 @@ export class ClubsController implements IController {
 
     private updateClub = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            const managers = req.body.managers.length === 0 ? req.user.email : req.body.managers;
+
             const club = new Club({
                 _id: req.params.id,
                 name: req.body.name,
                 category: req.body.category,
-                managers: req.body.managers,
+                managers,
                 type: req.body.type
             });
 
-            const updateClubResponse: ClubDto = await this.clubsService.updateClub(club, req.user.language);
+            const updateClubResponse: ClubDto = await this.clubsService.updateClub(club, req.user);
 
             if (updateClubResponse) {
                 res.send(updateClubResponse);
