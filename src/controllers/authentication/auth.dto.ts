@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsDateString } from "class-validator";
+import { IsString, IsEmail, IsDateString, IsArray } from "class-validator";
 
 class UserDto {
     @IsEmail()
@@ -15,6 +15,9 @@ class UserDto {
 
     @IsDateString()
     public birthdate: Date;
+
+    @IsArray()
+    public clubs: string[];
 
     @IsString()
     public password: string;

@@ -12,3 +12,10 @@ export class NotClubManagerException extends HttpException {
         super(403, message || "Only club managers can change or delete a club", {});
     }
 }
+
+export class ClubAlreadyJoinedException extends HttpException {
+    constructor(message: string) {
+        super(403, message || "You already joined this club", {});
+    }
+}
+

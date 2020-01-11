@@ -1,14 +1,17 @@
 import { ClubModel, Club } from "./clubs.model";
 
-import { ClubNotFoundException, NotClubManagerException } from "./clubs.exceptions";
+import { ClubNotFoundException, ClubAlreadyJoinedException, NotClubManagerException } from "./clubs.exceptions";
 import { TranslationService } from "../translation/translation.service";
+import { UsersService } from "../users/users.service";
 
 import UserDto from "../authentication/auth.dto";
+import { UserModel } from "../authentication/auth.model";
 
 
 export class ClubsService {
 
     translationService = new TranslationService();
+    usersService = new UsersService();
 
     public async getClubs() {
         try {
@@ -45,6 +48,40 @@ export class ClubsService {
 
             if (persistedClub) {
                 return persistedClub;
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+
+    public async joinClub(clubId: string, user: UserModel) {
+        try {
+            const club: ClubModel = await Club.findById(clubId);
+
+            if (club) {
+                if (!club.users.includes(user.email)) {
+                    club.users.push(user.email);
+
+                    const updateClubResponse: ClubModel = await Club.findByIdAndUpdate(
+                        club._id,
+                        club,
+                        { new: true }
+                    );
+
+                    if (updateClubResponse) {
+                        user.clubs.push(clubId);
+                        this.usersService.updateUser(user);
+
+                        return updateClubResponse;
+                    }
+                }
+                else {
+                    throw new ClubAlreadyJoinedException(await this.translationService.getTranslations(user.language, "clubAlreadyJoined"));
+                }
+            }
+            else {
+                throw new ClubNotFoundException(await this.translationService.getTranslations(user.language, "clubNotFound"));
             }
         }
         catch (err) {

@@ -10,6 +10,9 @@ class ClubDto {
     @IsArray()
     public managers: string[];
 
+    @IsArray()
+    public users: string[];
+
     @IsNumber()
     public type: number;
 }

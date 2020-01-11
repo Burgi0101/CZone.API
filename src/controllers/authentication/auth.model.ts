@@ -6,6 +6,7 @@ export type UserModel = Document & {
     firstname: string;
     lastname: string;
     birthdate: Date;
+    clubs: string[];
     password: string;
     language: string;
 };
@@ -16,6 +17,7 @@ export const UserSchema = new Schema({
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     birthdate: { type: Date, required: true },
+    clubs: { type: Array },
     password: { type: String, required: true },
     language: { type: String, required: true }
 });

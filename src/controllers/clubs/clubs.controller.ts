@@ -26,6 +26,7 @@ export class ClubsController implements IController {
         /* AUTHENTICATED ROUTES, USER NEEDS TO PASS VALID AUTH-TOKEN */
         this.router.get(`${this.path}/:id`, authMiddleware, this.getClubById);
         this.router.post(`${this.path}`, authMiddleware, validationMiddleware(ClubDto), this.createClub);
+        this.router.post(`${this.path}/join/:id`, authMiddleware, this.joinClub);
         this.router.put(`${this.path}/:id`, authMiddleware, validationMiddleware(ClubDto, true), this.updateClub);
         this.router.delete(`${this.path}/:id`, authMiddleware, this.deleteClub);
     }
@@ -81,12 +82,25 @@ export class ClubsController implements IController {
         }
     }
 
+    private joinClub = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const joinClubResponse: ClubDto = await this.clubsService.joinClub(req.params.id, req.user);
+
+            if (joinClubResponse) {
+                res.send(joinClubResponse);
+            }
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
     private updateClub = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             const fallbackRequestorIsManager = [req.user.email];
             const managers = req.body.managers === undefined ? fallbackRequestorIsManager : req.body.managers.length === 0 ? fallbackRequestorIsManager : req.body.managers;
 
-            const club = new Club({
+            const club: ClubModel = new Club({
                 _id: req.params.id,
                 name: req.body.name,
                 category: req.body.category,
