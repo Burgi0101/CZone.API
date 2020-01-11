@@ -1,6 +1,6 @@
 import { ClubModel, Club } from "./clubs.model";
 
-import { ClubNotFoundException } from "./clubs.exceptions";
+import { ClubNotFoundException, NotClubManagerException } from "./clubs.exceptions";
 import { TranslationService } from "../translation/translation.service";
 
 
@@ -70,19 +70,29 @@ export class ClubsService {
         }
     }
 
-    public async deleteClub(id: string, lang = "en") {
+    public async deleteClub(id: string, user: any) {
         try {
-            const deletedClub: ClubModel = await Club.findByIdAndDelete(id);
+            const club = await this.getClubById(id);
 
-            if (deletedClub) {
-                return deletedClub;
-            }
-            else {
-                throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
+            if (club) {
+                const isClubManager: boolean = club.managers.includes(user.email);
+
+                if (isClubManager) {
+                    const deletedClub: ClubModel = await Club.findByIdAndDelete(id);
+
+                    if (deletedClub) {
+                        return deletedClub;
+                    }
+                    else {
+                        throw new ClubNotFoundException(await this.translationService.getTranslations(user.lang, "clubNotFound"));
+                    }
+                } else {
+                    throw new NotClubManagerException(await this.translationService.getTranslations(user.lang, "notClubManager"));
+                }
             }
         }
         catch (err) {
-            throw new ClubNotFoundException(await this.translationService.getTranslations(lang, "clubNotFound"));
+            throw err;
         }
     }
 }

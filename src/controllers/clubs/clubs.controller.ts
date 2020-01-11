@@ -105,7 +105,7 @@ export class ClubsController implements IController {
 
     private deleteClub = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            const delteClubResponse: ClubDto = await this.clubsService.deleteClub(req.params.id, req.user.language);
+            const delteClubResponse: ClubDto = await this.clubsService.deleteClub(req.params.id, req.user);
 
             if (delteClubResponse) {
                 res.send(delteClubResponse);
