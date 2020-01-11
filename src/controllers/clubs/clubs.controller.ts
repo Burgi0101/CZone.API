@@ -83,7 +83,8 @@ export class ClubsController implements IController {
 
     private updateClub = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            const managers = req.body.managers.length === 0 ? req.user.email : req.body.managers;
+            const fallbackRequestorIsManager = [req.user.email];
+            const managers = req.body.managers === undefined ? fallbackRequestorIsManager : req.body.managers.length === 0 ? fallbackRequestorIsManager : req.body.managers;
 
             const club = new Club({
                 _id: req.params.id,
@@ -102,7 +103,6 @@ export class ClubsController implements IController {
         catch (err) {
             next(err);
         }
-
     }
 
     private deleteClub = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
